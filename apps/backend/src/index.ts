@@ -31,6 +31,11 @@ app.use(
 app.use(express.json({ limit: '15mb' }));
 app.use(express.urlencoded({ limit: '15mb', extended: true }));
 
+// Simple alive-check endpoint (no DB/Redis required)
+app.get('/health', (req, res) => {
+  res.status(200).json({ status: 'OK', uptime: process.uptime() });
+});
+
 // API Routes
 app.use('/api', router);
 
@@ -50,8 +55,9 @@ const startServer = async () => {
     // WebSockets initialization
     initSocketServer(server);
 
-    server.listen(PORT, () => {
-      console.log(`Backend server running on port ${PORT}`);
+    // Bind server specifically to 0.0.0.0 for hosting platforms (Render/Railway/etc)
+    server.listen(Number(PORT), '0.0.0.0', () => {
+      console.log(`Backend server running on port ${PORT} (host: 0.0.0.0)`);
     });
   } catch (error) {
     console.error('Failed to start backend server:', error);
