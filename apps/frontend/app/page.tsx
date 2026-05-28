@@ -595,10 +595,10 @@ function DashboardPageContent() {
     <MobileAppLayout activeSection={activeSection}>
       {view === 'dashboard' ? (
         // ================= DASHBOARD LISTINGS =================
-        <div className="space-y-4 flex flex-col relative bg-[#000000] xl:bg-transparent text-white xl:text-slate-800">
+        <div className="space-y-4 flex flex-col relative bg-[#000000] lg:bg-transparent text-white lg:text-slate-800">
           
           {/* Header block with back icon & Title */}
-          <div className="relative flex xl:hidden items-center justify-center select-none h-8 w-full shrink-0">
+          <div className="relative flex lg:hidden items-center justify-center select-none h-8 w-full shrink-0">
             <button
               onClick={() => router.push('/')}
               className="absolute left-0 h-8 w-8 rounded-full bg-white/10 hover:bg-white/20 text-white flex items-center justify-center transition-colors shrink-0"
@@ -613,7 +613,7 @@ function DashboardPageContent() {
 
           {displayAssignments.length === 0 ? (
             /* Empty assignments state screen */
-            <div className="flex-1 flex flex-col items-center justify-center text-center select-none py-12 px-4 bg-[#000000] xl:bg-transparent">
+            <div className="flex-1 flex flex-col items-center justify-center text-center select-none py-12 px-4 bg-[#000000] lg:bg-transparent">
               {/* Custom document with sparkle icon illustration */}
               <div className="relative mb-6">
                 <div className="bg-white/5 h-28 w-28 rounded-full flex items-center justify-center border border-white/10 relative">
@@ -632,8 +632,8 @@ function DashboardPageContent() {
                 </div>
               </div>
 
-              <h2 className="text-sm font-extrabold text-white xl:text-slate-800">No assignments yet</h2>
-              <p className="text-slate-400 xl:text-slate-500 text-[10px] mt-2 max-w-[280px] font-semibold leading-relaxed">
+              <h2 className="text-sm font-extrabold text-white lg:text-slate-800">No assignments yet</h2>
+              <p className="text-slate-400 lg:text-slate-500 text-[10px] mt-2 max-w-[280px] font-semibold leading-relaxed">
                 Create your first assignment to start collecting and grading student submissions. You can set up rubrics, define marking criteria, and let AI assist with grading.
               </p>
               
@@ -673,7 +673,7 @@ function DashboardPageContent() {
               </div>
 
               {/* Stacked Cards Layout */}
-              <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4 xl:gap-6 space-y-0">
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 lg:gap-6 space-y-0">
                 {filteredAssignments.map((assignment) => {
                   const showMenu = activeMenuId === assignment._id;
 
@@ -786,7 +786,7 @@ function DashboardPageContent() {
         <div className="space-y-4 flex flex-col select-none">
           
           {/* Header */}
-          <div className="relative flex xl:hidden items-center justify-center select-none h-8 w-full">
+          <div className="relative flex lg:hidden items-center justify-center select-none h-8 w-full">
             <button
               onClick={() => setView('dashboard')}
               className="absolute left-0 h-8 w-8 rounded-full bg-white/10 hover:bg-white/20 text-white flex items-center justify-center transition-colors shrink-0"
@@ -801,7 +801,7 @@ function DashboardPageContent() {
 
           {/* Stepper progress indicator */}
           <div className="w-full">
-            <div className="h-1 bg-white/10 xl:bg-slate-200 rounded-full overflow-hidden flex">
+            <div className="h-1 bg-white/10 lg:bg-slate-200 rounded-full overflow-hidden flex">
               <div className="h-full w-[60%] bg-[#FF6B35] rounded-full" />
             </div>
           </div>
@@ -1112,7 +1112,7 @@ function DashboardPageContent() {
         // ================= GROUPS SCREEN =================
         <div className="space-y-5 flex flex-col select-none">
           {/* Mobile header */}
-          <div className="flex xl:hidden items-center gap-3">
+          <div className="flex lg:hidden items-center gap-3">
             <button onClick={() => setView('dashboard')} className="h-8 w-8 rounded-full bg-white/10 hover:bg-white/20 text-white flex items-center justify-center transition-colors shrink-0">
               <ChevronLeft className="h-4.5 w-4.5" />
             </button>
@@ -1146,7 +1146,7 @@ function DashboardPageContent() {
           </div>
 
           {/* Group cards grid */}
-          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             {groupsList.filter(g => {
               const q = searchQuery.toLowerCase();
               return g.name.toLowerCase().includes(q) || g.subject.toLowerCase().includes(q) || g.code.toLowerCase().includes(q);
@@ -1195,7 +1195,7 @@ function DashboardPageContent() {
         // ================= LIBRARY SCREEN =================
         <div className="space-y-5 flex flex-col select-none">
           {/* Mobile Header */}
-          <div className="flex xl:hidden items-center gap-3">
+          <div className="flex lg:hidden items-center gap-3">
             <button
               onClick={() => setView('dashboard')}
               className="h-8 w-8 rounded-full bg-white/10 hover:bg-white/20 text-white flex items-center justify-center transition-colors shrink-0"
@@ -1210,15 +1210,15 @@ function DashboardPageContent() {
 
           {/* Stats Bar */}
           <div className="flex items-center gap-3 flex-wrap">
-            <div className="flex items-center gap-2 bg-white xl:bg-white/80 border border-slate-200 rounded-full px-3.5 py-1.5 text-[10px] font-bold text-slate-600 shadow-sm">
+            <div className="flex items-center gap-2 bg-white lg:bg-white/80 border border-slate-200 rounded-full px-3.5 py-1.5 text-[10px] font-bold text-slate-600 shadow-sm">
               <FolderOpen className="h-3.5 w-3.5 text-violet-500" />
               <span>{libraryItems.length} Collections</span>
             </div>
-            <div className="flex items-center gap-2 bg-white xl:bg-white/80 border border-slate-200 rounded-full px-3.5 py-1.5 text-[10px] font-bold text-slate-600 shadow-sm">
+            <div className="flex items-center gap-2 bg-white lg:bg-white/80 border border-slate-200 rounded-full px-3.5 py-1.5 text-[10px] font-bold text-slate-600 shadow-sm">
               <BookOpen className="h-3.5 w-3.5 text-[#FF6B35]" />
               <span>{libraryItems.reduce((sum, l) => sum + l.itemsCount, 0)} Total Items</span>
             </div>
-            <div className="flex items-center gap-2 bg-white xl:bg-white/80 border border-slate-200 rounded-full px-3.5 py-1.5 text-[10px] font-bold text-slate-600 shadow-sm">
+            <div className="flex items-center gap-2 bg-white lg:bg-white/80 border border-slate-200 rounded-full px-3.5 py-1.5 text-[10px] font-bold text-slate-600 shadow-sm">
               <Tag className="h-3.5 w-3.5 text-emerald-500" />
               <span>{[...new Set(libraryItems.map(l => l.subject))].length} Subjects</span>
             </div>
@@ -1245,11 +1245,11 @@ function DashboardPageContent() {
               <div className="h-20 w-20 rounded-full bg-violet-500/10 flex items-center justify-center mb-4">
                 <FolderOpen className="h-8 w-8 text-violet-400" />
               </div>
-              <h3 className="text-sm font-extrabold text-white xl:text-slate-800 mb-1">No collections found</h3>
-              <p className="text-[11px] text-slate-400 xl:text-slate-500 font-medium max-w-xs">Your question banks and exam templates will appear here as you build your library.</p>
+              <h3 className="text-sm font-extrabold text-white lg:text-slate-800 mb-1">No collections found</h3>
+              <p className="text-[11px] text-slate-400 lg:text-slate-500 font-medium max-w-xs">Your question banks and exam templates will appear here as you build your library.</p>
             </div>
           ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
               {libraryItems.filter(lib => {
                 const q = searchQuery.toLowerCase();
                 return lib.name.toLowerCase().includes(q) || lib.subject.toLowerCase().includes(q) || lib.type.toLowerCase().includes(q);
@@ -1317,7 +1317,7 @@ function DashboardPageContent() {
             <div className="flex items-center gap-3">
               <button
                 onClick={() => setView('dashboard')}
-                className="h-8 w-8 rounded-full bg-slate-100 xl:bg-white border border-slate-200 text-slate-700 flex items-center justify-center transition-colors shrink-0"
+                className="h-8 w-8 rounded-full bg-slate-100 lg:bg-white border border-slate-200 text-slate-700 flex items-center justify-center transition-colors shrink-0"
               >
                 <ChevronLeft className="h-4.5 w-4.5" />
               </button>
@@ -1328,9 +1328,9 @@ function DashboardPageContent() {
             </div>
           </div>
 
-          <div className="flex flex-col xl:flex-row gap-6">
+          <div className="flex flex-col lg:flex-row gap-6">
             {/* Settings Navigation Tabs */}
-            <div className="w-full xl:w-60 flex flex-row xl:flex-col gap-1 overflow-x-auto no-scrollbar xl:overflow-x-visible shrink-0 pb-2 xl:pb-0 border-b xl:border-b-0 xl:border-r border-slate-200 pr-0 xl:pr-4">
+            <div className="w-full lg:w-60 flex flex-row lg:flex-col gap-1 overflow-x-auto no-scrollbar lg:overflow-x-visible shrink-0 pb-2 lg:pb-0 border-b lg:border-b-0 lg:border-r border-slate-200 pr-0 lg:pr-4">
               <button
                 onClick={() => setActiveSettingsTab('profile')}
                 className={`flex items-center gap-2.5 px-4 py-3 rounded-xl text-xs font-bold whitespace-nowrap transition-all cursor-pointer ${

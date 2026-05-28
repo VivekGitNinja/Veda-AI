@@ -531,7 +531,7 @@ export default function AssessmentPaperPage({ params }: PageProps) {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-[#000000] xl:bg-transparent flex items-center justify-center text-xs font-bold text-slate-500">
+      <div className="min-h-screen bg-[#000000] lg:bg-transparent flex items-center justify-center text-xs font-bold text-slate-500">
         <Loader2 className="h-6 w-6 text-[#FF6B35] animate-spin mr-2" />
         <span>Loading Question Paper...</span>
       </div>
@@ -541,10 +541,10 @@ export default function AssessmentPaperPage({ params }: PageProps) {
   if (errorMessage && !assignmentResult) {
     return (
       <MobileAppLayout activeSection="assignments">
-        <div className="flex flex-col items-center justify-center py-12 px-4 text-center select-none bg-[#000000] xl:bg-transparent min-h-[400px]">
+        <div className="flex flex-col items-center justify-center py-12 px-4 text-center select-none bg-[#000000] lg:bg-transparent min-h-[400px]">
           <AlertCircle className="h-10 w-10 text-rose-500 mx-auto" />
-          <h2 className="text-sm font-extrabold text-white xl:text-slate-800 mt-4">Failed to load paper</h2>
-          <p className="text-[10px] text-slate-400 xl:text-slate-500 mt-1 font-semibold leading-relaxed">{errorMessage}</p>
+          <h2 className="text-sm font-extrabold text-white lg:text-slate-800 mt-4">Failed to load paper</h2>
+          <p className="text-[10px] text-slate-400 lg:text-slate-500 mt-1 font-semibold leading-relaxed">{errorMessage}</p>
           <Link
             href="/"
             className="mt-6 inline-block text-[10px] font-bold bg-[#FF6B35] text-white hover:bg-orange-600 py-2 px-5 rounded-full transition-colors cursor-pointer"
@@ -558,12 +558,12 @@ export default function AssessmentPaperPage({ params }: PageProps) {
 
   return (
     <MobileAppLayout activeSection="assignments" isPaperView={true}>
-      <div className="grid grid-cols-1 xl:grid-cols-3 gap-6 items-start select-none bg-[#000000] xl:bg-transparent">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 items-start select-none bg-[#000000] lg:bg-transparent">
         
         {/* Left Column: Actions and Navigation */}
-        <div className="space-y-4 xl:col-span-1">
+        <div className="space-y-4 lg:col-span-1">
           {/* Header navigation bar */}
-          <div className="relative flex xl:hidden items-center justify-center select-none h-8 w-full">
+          <div className="relative flex lg:hidden items-center justify-center select-none h-8 w-full">
             <button
               onClick={() => router.push('/')}
               className="absolute left-0 h-8 w-8 rounded-full bg-white/10 hover:bg-white/20 text-white flex items-center justify-center transition-colors shrink-0"
@@ -608,7 +608,7 @@ export default function AssessmentPaperPage({ params }: PageProps) {
         {assignmentResult && (
           <>
             {/* Left Column Part 2: Credentials Input */}
-            <div className="space-y-4 xl:col-span-1 xl:mt-0">
+            <div className="space-y-4 lg:col-span-1 lg:mt-0">
               {/* Student Credentials Expandable panel */}
               <div className="bg-[#1C1C1E] border border-white/15 rounded-[20px] p-4 shadow-sm space-y-3">
                 <button 
@@ -673,8 +673,8 @@ export default function AssessmentPaperPage({ params }: PageProps) {
             </div> {/* End of Credentials Column */}
 
             {/* Right Column: Centered A4 Print Preview Canvas */}
-            <div className="xl:col-span-2 flex justify-center pb-12 select-text">
-              <div className="w-full max-w-full xl:max-w-[800px] bg-white border border-slate-300 rounded-2xl xl:rounded-[28px] p-4 sm:p-8 xl:p-12 shadow-lg space-y-6 font-serif leading-relaxed text-slate-900 min-h-[1000px]">
+            <div className="lg:col-span-2 flex justify-center pb-12 select-text">
+              <div className="w-full max-w-full lg:max-w-[800px] bg-white border border-slate-300 rounded-2xl lg:rounded-[28px] p-4 sm:p-8 lg:p-12 shadow-lg space-y-6 font-serif leading-relaxed text-slate-900 min-h-[1000px]">
                 
                 {/* Paper Header */}
                 <div className="text-center space-y-1">

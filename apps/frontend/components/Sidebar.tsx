@@ -66,7 +66,7 @@ export default function Sidebar({ activeSection = 'assignments', isPaperView = f
   };
 
   return (
-    <aside className="w-64 border-r border-slate-200 bg-white flex flex-col justify-between shrink-0 hidden xl:flex h-full select-none overflow-y-auto no-scrollbar">
+    <aside className="w-64 border-r border-slate-200 bg-white flex flex-col justify-between shrink-0 hidden lg:flex h-full select-none overflow-y-auto no-scrollbar">
       <div className="flex flex-col">
         {/* Brand Header */}
         <div className="h-16 px-6 flex items-center gap-3 border-b border-slate-100">

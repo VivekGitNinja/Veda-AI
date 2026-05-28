@@ -94,12 +94,12 @@ export default function MobileAppLayout({ children, activeSection = 'assignments
   };
 
   return (
-    <div className="h-screen w-full overflow-hidden bg-[#000000] xl:bg-[#F8FAFC] text-slate-100 xl:text-slate-800 flex font-sans">
+    <div className="h-[100dvh] w-full overflow-hidden bg-[#000000] lg:bg-[#F8FAFC] text-slate-100 lg:text-slate-800 flex font-sans">
       
       {/* =========================================================================
           DESKTOP LAYOUT (Screens >= 1024px)
           ========================================================================= */}
-      <div className="hidden xl:flex flex-row w-full h-full overflow-hidden">
+      <div className="hidden lg:flex flex-row w-full h-full overflow-hidden">
         
         {/* Persistent left sidebar — never scrolls */}
         <Sidebar activeSection={activeSection} isPaperView={isPaperView} />
@@ -202,7 +202,7 @@ export default function MobileAppLayout({ children, activeSection = 'assignments
               {/* School badge */}
               <div 
                 onClick={() => router.push('/?view=settings')}
-                className="hidden xl:flex flex-col text-right cursor-pointer hover:opacity-80 transition-opacity select-none"
+                className="hidden lg:flex flex-col text-right cursor-pointer hover:opacity-80 transition-opacity select-none"
               >
                 <span className="text-xs font-black text-slate-800">{profile.schoolName}</span>
                 <span className="text-[9px] text-slate-400 font-bold">{profile.schoolBranch}</span>
@@ -265,7 +265,7 @@ export default function MobileAppLayout({ children, activeSection = 'assignments
           MOBILE & TABLET VIEWPORTS (Screens < 1024px)
           True fixed shell: header + scrollable content + fixed bottom nav
           ========================================================================= */}
-      <div className="flex xl:hidden flex-col w-full h-full bg-[#000000]">
+      <div className="flex lg:hidden flex-col w-full h-full bg-[#000000] overflow-x-hidden overflow-y-hidden">
         
         {/* ── FIXED TOP HEADER ── always visible, never scrolls away */}
         <div className="shrink-0 z-20 px-4 pt-3 pb-1">
@@ -444,7 +444,7 @@ export default function MobileAppLayout({ children, activeSection = 'assignments
         )}
 
         {/* ── SCROLLABLE CONTENT AREA ── fills remaining space between header and bottom nav */}
-        <div className="flex-1 overflow-y-auto no-scrollbar px-4 pt-3 pb-4 bg-[#000000] min-h-0">
+        <div className="flex-1 overflow-y-auto overflow-x-hidden no-scrollbar px-4 pt-3 pb-4 bg-[#000000] min-h-0">
           <div className="max-w-2xl mx-auto pb-20">
             {children}
           </div>
