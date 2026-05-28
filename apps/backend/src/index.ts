@@ -5,6 +5,7 @@ import dotenv from 'dotenv';
 import { connectDB, connectRedis } from './config/db';
 import router from './routes/assignmentRoutes';
 import { initSocketServer } from './sockets/socketServer';
+import { startAssessmentWorker } from './workers/assessmentWorker';
 
 dotenv.config();
 
@@ -54,6 +55,10 @@ const startServer = async () => {
 
     // WebSockets initialization
     initSocketServer(server);
+
+    // Start background worker in the same process for consolidated hosting platforms (Railway/etc)
+    console.log('Starting BullMQ assessment worker inside main server process...');
+    startAssessmentWorker();
 
     // Bind server specifically to 0.0.0.0 for hosting platforms (Render/Railway/etc)
     server.listen(Number(PORT), '0.0.0.0', () => {

@@ -389,28 +389,51 @@ ${assignment.fileContent ? `File context: ${assignment.fileContent.substring(0, 
 Return ONLY valid JSON (no markdown):
 {"title":"...","subject":"...","totalMarks":${expectedTotalMarks},"duration":"...","sections":[{"title":"...","instruction":"...","questions":[{"text":"...","type":"mcq|short-answer|long-answer|case-based","difficulty":"easy|medium|hard","marks":1,"options":["A","B","C","D"]}]}],"answerKey":[{"questionIndex":0,"answer":"..."}]}`;
 
-  const response = await fetch(
-    `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${API_KEY}`,
-    {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        contents: [{ parts: [{ text: prompt }] }],
-        generationConfig: { responseMimeType: 'application/json' },
-      }),
-    }
-  );
+  console.log(`Calling Gemini API for assignment ${assignment._id}...`);
+  const controller = new AbortController();
+  const timeoutId = setTimeout(() => {
+    console.warn(`Gemini API call timed out after 15 seconds for assignment ${assignment._id}. Aborting request.`);
+    controller.abort();
+  }, 15000);
 
-  if (!response.ok) throw new Error(`Gemini API Error: ${response.status}`);
-  const data = await response.json();
-  const raw = data.candidates?.[0]?.content?.parts?.[0]?.text;
-  if (!raw) throw new Error('Empty Gemini response');
-  
-  let cleanRaw = raw.trim();
-  if (cleanRaw.startsWith('```')) {
-    cleanRaw = cleanRaw.replace(/^```(json)?/i, '').replace(/```$/, '').trim();
+  try {
+    const response = await fetch(
+      `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${API_KEY}`,
+      {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          contents: [{ parts: [{ text: prompt }] }],
+          generationConfig: { responseMimeType: 'application/json' },
+        }),
+        signal: controller.signal,
+      }
+    );
+
+    clearTimeout(timeoutId);
+
+    if (!response.ok) {
+      throw new Error(`Gemini API Error: ${response.status} ${response.statusText}`);
+    }
+
+    const data = await response.json();
+    const raw = data.candidates?.[0]?.content?.parts?.[0]?.text;
+    if (!raw) {
+      throw new Error('Empty Gemini response structure');
+    }
+    
+    let cleanRaw = raw.trim();
+    if (cleanRaw.startsWith('```')) {
+      cleanRaw = cleanRaw.replace(/^```(json)?/i, '').replace(/```$/, '').trim();
+    }
+    
+    console.log(`Gemini API returned valid response for assignment ${assignment._id}`);
+    return JSON.parse(cleanRaw);
+  } catch (err: any) {
+    clearTimeout(timeoutId);
+    console.error(`Error during Gemini API call for ${assignment._id}:`, err.message);
+    throw err;
   }
-  return JSON.parse(cleanRaw);
 };
 
 export const startAssessmentWorker = () => {
