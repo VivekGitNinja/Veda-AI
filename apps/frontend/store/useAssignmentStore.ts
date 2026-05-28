@@ -95,9 +95,36 @@ const initialForm: IAssignmentForm = {
 };
 
 const getUrls = () => {
-  let API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api';
-  let WS_URL = process.env.NEXT_PUBLIC_WS_URL || 'ws://localhost:5000';
+  let API_URL = process.env.NEXT_PUBLIC_API_URL || '';
+  let WS_URL = process.env.NEXT_PUBLIC_WS_URL || '';
   
+  // If we are in the browser and running on a deployed Vercel/non-localhost domain,
+  // and the environment variables are either missing or pointing to localhost/vercel,
+  // we automatically use the known live production Railway backend!
+  if (typeof window !== 'undefined') {
+    const isDeployed = window.location.hostname.endsWith('vercel.app') || 
+                       (window.location.hostname !== 'localhost' && window.location.hostname !== '127.0.0.1');
+                       
+    const needsFallback = !API_URL || 
+                          API_URL.includes('localhost') || 
+                          API_URL.includes('127.0.0.1') || 
+                          API_URL.includes(window.location.hostname);
+                          
+    if (isDeployed && needsFallback) {
+      API_URL = 'https://vedaaibackend-production-1759.up.railway.app/api';
+      WS_URL = 'wss://vedaaibackend-production-1759.up.railway.app';
+    }
+  }
+
+  // If we are still empty (e.g. server-side render or local development with no env vars),
+  // fall back to localhost
+  if (!API_URL) {
+    API_URL = 'http://localhost:5000/api';
+  }
+  if (!WS_URL) {
+    WS_URL = 'ws://localhost:5000';
+  }
+
   // Clean trailing slashes
   if (API_URL.endsWith('/')) {
     API_URL = API_URL.slice(0, -1);
@@ -117,6 +144,18 @@ const getUrls = () => {
   }
   
   return { API_URL, WS_URL };
+};
+
+const safeParseJson = async (response: Response) => {
+  const contentType = response.headers.get('content-type') || '';
+  if (!contentType.includes('application/json')) {
+    const text = await response.text();
+    if (text.trim().startsWith('<!DOCTYPE') || text.trim().startsWith('<html')) {
+      throw new Error(`Server returned HTML response (${response.status} ${response.statusText}). Please check backend status.`);
+    }
+    throw new Error(`Server returned non-JSON response (${response.status} ${response.statusText}): ${text.slice(0, 100)}`);
+  }
+  return response.json();
 };
 
 let ws: WebSocket | null = null;
@@ -165,7 +204,7 @@ export const useAssignmentStore = create<AssignmentState>((set, get) => ({
     try {
       const response = await fetch(`${API_URL}/profile`);
       if (response.ok) {
-        const data = await response.json();
+        const data = await safeParseJson(response);
         set({ profile: data });
       }
     } catch (err) {
@@ -178,7 +217,7 @@ export const useAssignmentStore = create<AssignmentState>((set, get) => ({
     try {
       const response = await fetch(`${API_URL}/groups`);
       if (response.ok) {
-        const data = await response.json();
+        const data = await safeParseJson(response);
         set({ groupsList: data });
       }
     } catch (err) {
@@ -195,7 +234,7 @@ export const useAssignmentStore = create<AssignmentState>((set, get) => ({
         body: JSON.stringify(fields),
       });
       if (response.ok) {
-        const data = await response.json();
+        const data = await safeParseJson(response);
         set({ profile: data });
       }
     } catch (err) {
@@ -238,7 +277,7 @@ export const useAssignmentStore = create<AssignmentState>((set, get) => ({
         body: JSON.stringify(get().form),
       });
 
-      const data = await response.json();
+      const data = await safeParseJson(response);
       if (!response.ok) {
         throw new Error(data.error || 'Failed to initiate assignment creation');
       }
@@ -256,7 +295,7 @@ export const useAssignmentStore = create<AssignmentState>((set, get) => ({
     const { API_URL } = getUrls();
     try {
       const response = await fetch(`${API_URL}/assignments`);
-      const data = await response.json();
+      const data = await safeParseJson(response);
       if (!response.ok) throw new Error(data.error || 'Failed to fetch assignments list');
       set({ assignmentsList: data.assignments || [] });
       return data.assignments || [];
@@ -272,7 +311,7 @@ export const useAssignmentStore = create<AssignmentState>((set, get) => ({
 
     try {
       const response = await fetch(`${API_URL}/assignments/${id}`);
-      const data = await response.json();
+      const data = await safeParseJson(response);
       if (!response.ok) throw new Error(data.error || 'Failed to fetch assignment details');
 
       const assignment = data.assignment as IAssignment;
@@ -295,7 +334,7 @@ export const useAssignmentStore = create<AssignmentState>((set, get) => ({
 
     try {
       const response = await fetch(`${API_URL}/results/${id}`);
-      const data = await response.json();
+      const data = await safeParseJson(response);
       if (!response.ok) throw new Error(data.error || 'Failed to fetch assignment results');
 
       set({ assignmentResult: data.result });
@@ -314,7 +353,7 @@ export const useAssignmentStore = create<AssignmentState>((set, get) => ({
       const response = await fetch(`${API_URL}/assignments/${id}/regenerate`, {
         method: 'POST',
       });
-      const data = await response.json();
+      const data = await safeParseJson(response);
       if (!response.ok) throw new Error(data.error || 'Failed to regenerate assignment');
       return data.assignmentId;
     } catch (err: any) {
@@ -330,7 +369,7 @@ export const useAssignmentStore = create<AssignmentState>((set, get) => ({
       const response = await fetch(`${API_URL}/assignments/${id}`, {
         method: 'DELETE',
       });
-      const data = await response.json();
+      const data = await safeParseJson(response);
       if (!response.ok) throw new Error(data.error || 'Failed to delete assignment');
       
       const list = get().assignmentsList.filter(a => a._id !== id);
