@@ -494,7 +494,7 @@ export const startAssessmentWorker = () => {
       }
     },
     {
-      connection: { host: redisOptions.host, port: redisOptions.port, password: redisOptions.password },
+      connection: redisOptions,
       concurrency: 2,
     }
   );

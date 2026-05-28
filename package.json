@@ -13,6 +13,7 @@
     "build:frontend": "npm run build --workspace=apps/frontend",
     "start:backend": "npm run start --workspace=apps/backend",
     "start:worker": "npm run start:worker --workspace=apps/backend",
+    "start:worker:prod": "npm run start:worker:prod --workspace=apps/backend",
     "docker:up": "docker-compose up -d",
     "docker:down": "docker-compose down"
   }

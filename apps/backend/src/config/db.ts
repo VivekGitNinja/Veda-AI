@@ -4,10 +4,28 @@ import dotenv from 'dotenv';
 
 dotenv.config();
 
+let REDIS_HOST = process.env.REDIS_HOST || '127.0.0.1';
+let REDIS_PORT = parseInt(process.env.REDIS_PORT || '6379', 10);
+let REDIS_PASSWORD = process.env.REDIS_PASSWORD || undefined;
+let REDIS_TLS = false;
+
+if (process.env.REDIS_URL) {
+  try {
+    const url = new URL(process.env.REDIS_URL);
+    REDIS_HOST = url.hostname;
+    REDIS_PORT = parseInt(url.port || '6379', 10);
+    if (url.password) {
+      REDIS_PASSWORD = decodeURIComponent(url.password);
+    }
+    if (url.protocol === 'rediss:') {
+      REDIS_TLS = true;
+    }
+  } catch (err) {
+    console.error('Failed to parse REDIS_URL:', err);
+  }
+}
+
 const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://127.0.0.1:27017/vedaai-assessment';
-const REDIS_HOST = process.env.REDIS_HOST || '127.0.0.1';
-const REDIS_PORT = parseInt(process.env.REDIS_PORT || '6379', 10);
-const REDIS_PASSWORD = process.env.REDIS_PASSWORD || undefined;
 
 export const connectDB = async () => {
   try {
@@ -25,17 +43,28 @@ export const getRedisConnectionOptions = () => {
     port: REDIS_PORT,
     password: REDIS_PASSWORD,
     maxRetriesPerRequest: null, // Required by BullMQ
+    ...(REDIS_TLS ? { tls: {} } : {}),
   };
 };
 
-export const redisClient = createClient({
-  socket: {
-    host: REDIS_HOST,
-    port: REDIS_PORT,
-    reconnectStrategy: (retries) => Math.min(retries * 50, 2000),
-  },
-  password: REDIS_PASSWORD,
-});
+export const redisClient = createClient(
+  process.env.REDIS_URL
+    ? {
+        url: process.env.REDIS_URL,
+        socket: {
+          reconnectStrategy: (retries) => Math.min(retries * 50, 2000),
+          ...(REDIS_TLS ? { tls: true } : {}),
+        },
+      }
+    : {
+        socket: {
+          host: REDIS_HOST,
+          port: REDIS_PORT,
+          reconnectStrategy: (retries) => Math.min(retries * 50, 2000),
+        },
+        password: REDIS_PASSWORD,
+      }
+);
 
 redisClient.on('error', (err) => {
   // Catch but don't crash

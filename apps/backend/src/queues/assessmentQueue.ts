@@ -4,11 +4,7 @@ import { getRedisConnectionOptions } from '../config/db';
 const redisOptions = getRedisConnectionOptions();
 
 export const assessmentQueue = new Queue('assessment-queue', {
-  connection: {
-    host: redisOptions.host,
-    port: redisOptions.port,
-    password: redisOptions.password,
-  },
+  connection: redisOptions,
 });
 
 export const addAssessmentJob = async (assignmentId: string) => {
