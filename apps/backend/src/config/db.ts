@@ -70,9 +70,9 @@ export const connectDB = async () => {
   try {
     await mongoose.connect(MONGODB_URI);
     console.log('MongoDB connected successfully');
-  } catch (error) {
-    console.error('MongoDB connection failed:', error);
-    process.exit(1);
+  } catch (error: any) {
+    console.error('MongoDB connection failed on startup:', error.message || error);
+    // Do not call process.exit(1) so the container can boot and serve /health for diagnostics
   }
 };
 
