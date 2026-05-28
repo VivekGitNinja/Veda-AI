@@ -541,8 +541,9 @@ function DashboardPageContent() {
         router.push(`/generate/${assignmentId}`);
       }, 500);
     } else {
-      if (errorMessage) {
-        setToast({ message: errorMessage, type: 'error' });
+      const freshErrorMessage = useAssignmentStore.getState().errorMessage;
+      if (freshErrorMessage) {
+        setToast({ message: freshErrorMessage, type: 'error' });
       } else {
         setToast({ message: 'Validation failed. Please correct form fields.', type: 'error' });
       }
@@ -562,7 +563,8 @@ function DashboardPageContent() {
     if (success) {
       setToast({ message: 'Assignment deleted successfully.', type: 'success' });
     } else {
-      setToast({ message: errorMessage || 'Failed to delete assignment.', type: 'error' });
+      const freshErrorMessage = useAssignmentStore.getState().errorMessage;
+      setToast({ message: freshErrorMessage || 'Failed to delete assignment.', type: 'error' });
     }
   };
 

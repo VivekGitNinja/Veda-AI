@@ -95,8 +95,27 @@ const initialForm: IAssignmentForm = {
 };
 
 const getUrls = () => {
-  const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api';
-  const WS_URL = process.env.NEXT_PUBLIC_WS_URL || 'ws://localhost:5000';
+  let API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api';
+  let WS_URL = process.env.NEXT_PUBLIC_WS_URL || 'ws://localhost:5000';
+  
+  // Clean trailing slashes
+  if (API_URL.endsWith('/')) {
+    API_URL = API_URL.slice(0, -1);
+  }
+  if (WS_URL.endsWith('/')) {
+    WS_URL = WS_URL.slice(0, -1);
+  }
+  
+  // Auto-append /api to API_URL if missing
+  if (API_URL.startsWith('http') && !API_URL.endsWith('/api')) {
+    API_URL = `${API_URL}/api`;
+  }
+  
+  // Auto-upgrade WS_URL to wss:// if API_URL is secure
+  if (API_URL.startsWith('https://') && WS_URL.startsWith('ws://')) {
+    WS_URL = WS_URL.replace('ws://', 'wss://');
+  }
+  
   return { API_URL, WS_URL };
 };
 
